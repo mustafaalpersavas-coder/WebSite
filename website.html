@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA — Premium E-Ticaret</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --surface: #111118;
+    --surface2: #1A1A24;
+    --primary: #C8F135;
+    --primary-dim: #a8d420;
+    --text: #F0EDE8;
+    --text-muted: #8A8799;
+    --text-dim: #555462;
+    --accent: #7C5CFC;
+    --accent2: #FC5C7D;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --radius: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --nav-h: 64px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; line-height: 1.1; }
+
+  /* ──────────── PAGE SYSTEM ──────────── */
+  .page { display: none; min-height: 100vh; padding-top: var(--nav-h); }
+  .page.active { display: block; }
+
+  /* ──────────── NAVBAR ──────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    height: var(--nav-h);
+    background: rgba(10,10,15,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 clamp(20px,5vw,80px);
+    gap: 32px;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+    cursor: pointer;
+    margin-right: auto;
+  }
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex; gap: 4px;
+    list-style: none;
+    position: absolute; left: 50%; transform: translateX(-50%);
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: all .2s;
+    cursor: pointer;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--surface2); }
+
+  .nav-cart {
+    margin-left: auto;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-cart:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cart-badge {
+    background: var(--primary);
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 0 6px;
+    line-height: 18px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* ──────────── BUTTONS ──────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    transition: all .25s;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #0A0A0F;
+  }
+  .btn-primary:hover { background: #d4ff40; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:hover { background: #6a4aef; transform: translateY(-1px); }
+
+  .btn-danger {
+    background: #2a0a0f;
+    color: var(--accent2);
+    border: 1px solid rgba(252,92,125,0.2);
+  }
+  .btn-danger:hover { background: rgba(252,92,125,0.12); }
+
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ──────────── SECTION UTILS ──────────── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px,5vw,80px); }
+  .section { padding: 80px 0; }
+  .section-sm { padding: 48px 0; }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(124,92,252,0.1);
+    border: 1px solid rgba(124,92,252,0.25);
+    color: #a688ff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+  .tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* ──────────── CARDS ──────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+
+  /* ──────────── GRID ──────────── */
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+
+  /* ══════════════════════════════════════════
+     PAGE 1 — HOME
+  ══════════════════════════════════════════ */
+
+  /* HERO */
+  .hero {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.18;
+  }
+  .hero-blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -100px; }
+  .hero-blob-2 { width: 400px; height: 400px; background: var(--primary); bottom: -100px; left: 100px; }
+
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+
+  .hero h1 {
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 0.95;
+    margin-bottom: 28px;
+  }
+  .hero h1 .line-accent { color: var(--primary); }
+  .hero h1 .line-dim { color: var(--text-muted); }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin-bottom: 40px;
+    line-height: 1.65;
+  }
+
+  .hero-cta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+  .hero-stats {
+    display: flex; gap: 40px;
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .stat-label { font-size: 13px; color: var(--text-muted); }
+
+  /* FEATURES */
+  .feat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .feat-icon-1 { background: rgba(124,92,252,0.12); }
+  .feat-icon-2 { background: rgba(200,241,53,0.08); }
+  .feat-icon-3 { background: rgba(252,92,125,0.1); }
+
+  .feat-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .feat-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background: linear-gradient(135deg, #1a1a24 0%, #111118 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-xl);
+    padding: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: var(--accent);
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.08;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .cta-banner h2 { font-size: clamp(28px,4vw,42px); font-weight: 800; margin-bottom: 16px; }
+  .cta-banner p { color: var(--text-muted); margin-bottom: 32px; font-size: 16px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+  /* ══════════════════════════════════════════
+     PAGE 2 — SİPARİŞ / SHOP
+  ══════════════════════════════════════════ */
+  .page-header {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .breadcrumb {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 13px; color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .breadcrumb span { color: var(--text-dim); }
+  .breadcrumb .current { color: var(--text); }
+
+  .shop-layout { display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; }
+
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .2s, transform .2s;
+  }
+  .product-card:hover { border-color: var(--border-strong); transform: translateY(-3px); }
+
+  .product-img {
+    height: 180px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    position: relative;
+  }
+  .product-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--primary);
+    color: #0A0A0F;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+
+  .product-info { padding: 16px; }
+  .product-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .product-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: sticky; top: calc(var(--nav-h) + 20px);
+  }
+  .sidebar-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+
+  .filter-group { margin-bottom: 24px; }
+  .filter-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .filter-opts { display: flex; flex-direction: column; gap: 8px; }
+
+  .filter-opt {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--text);
+    cursor: pointer;
+  }
+  .filter-opt input[type=checkbox] { accent-color: var(--primary); width: 16px; height: 16px; }
+
+  .price-range { display: flex; flex-direction: column; gap: 8px; }
+  .range-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .range-input {
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+  }
+
+  /* ══════════════════════════════════════════
+     PAGE 3 — CART
+  ══════════════════════════════════════════ */
+  .cart-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
+
+  .cart-items { display: flex; flex-direction: column; gap: 12px; }
+
+  .cart-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .cart-item-img {
+    width: 72px; height: 72px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  .cart-item-name { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+  .cart-item-sub { font-size: 13px; color: var(--text-muted); }
+
+  .qty-ctrl {
+    display: flex; align-items: center; gap: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 10px;
+    width: fit-content;
+  }
+  .qty-btn {
+    width: 32px; height: 32px;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qty-btn:hover { background: var(--surface); }
+  .qty-val { width: 36px; text-align: center; font-size: 14px; font-weight: 500; line-height: 32px; }
+
+  .cart-item-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    text-align: right;
+  }
+
+  /* ORDER SUMMARY */
+  .order-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: sticky; top: calc(var(--nav-h) + 20px);
+  }
+
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-row .label { color: var(--text-muted); }
+  .summary-total {
+    display: flex; justify-content: space-between;
+    padding: 16px 0 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  /* STRIPE FORM */
+  .stripe-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .stripe-title {
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text-muted);
+  }
+  .stripe-title::after { content: '🔒'; font-size: 12px; }
+
+  .form-field { margin-bottom: 12px; }
+  .form-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; display: block; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-input {
+    width: 100%;
+    height: 48px;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 0 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color .2s;
+  }
+  .form-input:focus { outline: none; border-color: var(--accent); }
+  .form-input::placeholder { color: var(--text-dim); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color .2s;
+  }
+  .form-textarea:focus { outline: none; border-color: var(--accent); }
+  .form-textarea::placeholder { color: var(--text-dim); }
+
+  /* CART EMPTY */
+  .cart-empty {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--text-muted);
+  }
+  .cart-empty .big-icon { font-size: 64px; margin-bottom: 20px; }
+  .cart-empty h3 { font-size: 22px; margin-bottom: 8px; color: var(--text); }
+
+  /* ══════════════════════════════════════════
+     PAGE 4 — ABOUT
+  ══════════════════════════════════════════ */
+  .about-hero {
+    position: relative;
+    min-height: 420px;
+    display: flex; align-items: flex-end;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    margin-bottom: 80px;
+  }
+
+  .about-hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a1a30 0%, #0d0d18 100%);
+  }
+  .about-hero-grid {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 60px),
+                      repeating-linear-gradient(90deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 60px);
+    opacity: 0.5;
+  }
+  .about-hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+  }
+  .ahb1 { width: 500px; height: 300px; background: var(--accent); opacity: 0.12; top: -80px; right: 0; }
+  .ahb2 { width: 300px; height: 300px; background: var(--primary); opacity: 0.07; bottom: 0; left: 100px; }
+
+  .about-hero-content {
+    position: relative; z-index: 1;
+    padding: 60px;
+  }
+  .about-hero-content h1 { font-size: clamp(36px,5vw,60px); font-weight: 800; margin-bottom: 16px; }
+  .about-hero-content p { color: var(--text-muted); font-size: 18px; max-width: 480px; }
+
+  .mission-section { text-align: center; max-width: 720px; margin: 0 auto; }
+  .mission-section h2 { font-size: clamp(28px,4vw,40px); font-weight: 800; margin-bottom: 20px; }
+  .mission-section p { color: var(--text-muted); font-size: 17px; line-height: 1.75; }
+
+  .divider {
+    width: 60px; height: 3px;
+    background: var(--primary);
+    border-radius: 99px;
+    margin: 0 auto 40px;
+  }
+
+  /* TEAM */
+  .team-section { margin-top: 80px; }
+  .team-section h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 40px; }
+
+  .team-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    text-align: center;
+    transition: border-color .2s, transform .2s;
+  }
+  .team-card:hover { border-color: var(--border-strong); transform: translateY(-3px); }
+
+  .team-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    border: 2px solid var(--border-strong);
+  }
+  .team-name { font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+  .team-role { font-size: 14px; color: var(--accent); margin-bottom: 10px; }
+  .team-bio { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ══════════════════════════════════════════
+     PAGE 5 — CONTACT
+  ══════════════════════════════════════════ */
+  .contact-layout { display: grid; grid-template-columns: 1fr 480px; gap: 48px; align-items: start; }
+
+  .contact-form-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+  }
+
+  .info-cards { display: flex; flex-direction: column; gap: 16px; }
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex; gap: 16px; align-items: center;
+    transition: border-color .2s;
+  }
+  .info-card:hover { border-color: var(--border-strong); }
+
+  .info-icon {
+    width: 44px; height: 44px; min-width: 44px;
+    border-radius: 10px;
+    background: rgba(124,92,252,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .info-icon-label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+  .info-icon-val { font-size: 15px; font-weight: 500; }
+
+  .contact-map {
+    margin-top: 16px;
+    height: 160px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  .contact-map-grid {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 30px),
+                      repeating-linear-gradient(90deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 30px);
+  }
+  .map-pin { position: relative; z-index: 1; text-align: center; }
+  .map-dot { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; margin: 0 auto 6px; box-shadow: 0 0 0 4px rgba(200,241,53,0.2); }
+
+  /* ══════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════ */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 64px 0 0;
+    margin-top: 80px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+
+  .footer-brand .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .footer-brand p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 220px; }
+
+  .footer-col-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 16px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; transition: color .15s; cursor: pointer; }
+  .footer-links a:hover { color: var(--text); }
+
+  .social-links { display: flex; gap: 8px; margin-bottom: 24px; }
+  .social-btn {
+    width: 36px; height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color .15s;
+    text-decoration: none;
+  }
+  .social-btn:hover { border-color: var(--primary); }
+
+  .newsletter { display: flex; gap: 0; }
+  .newsletter-input {
+    flex: 1;
+    height: 40px;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-right: none;
+    border-radius: var(--radius) 0 0 var(--radius);
+    padding: 0 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .newsletter-input:focus { outline: none; border-color: var(--primary); }
+  .newsletter-btn {
+    background: var(--primary);
+    color: #0A0A0F;
+    border: none;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    transition: background .15s;
+  }
+  .newsletter-btn:hover { background: #d4ff40; }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p { font-size: 13px; color: var(--text-dim); }
+
+  /* ══════════════════════════════════════════
+     TOAST / NOTIFICATIONS
+  ══════════════════════════════════════════ */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px); opacity: 0;
+    transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 20px; }
+  .toast-success { border-color: rgba(200,241,53,0.3); }
+  .toast-error { border-color: rgba(252,92,125,0.3); }
+
+  /* ══════════════════════════════════════════
+     SECTION TITLES
+  ══════════════════════════════════════════ */
+  .section-title { font-size: clamp(28px,4vw,38px); font-weight: 800; margin-bottom: 12px; }
+  .section-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 48px; }
+
+  /* ══════════════════════════════════════════
+     LOADING OVERLAY
+  ══════════════════════════════════════════ */
+  .loading-overlay {
+    position: fixed; inset: 0; z-index: 9000;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border-strong);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ══════════════════════════════════════════
+     SUCCESS STATE
+  ══════════════════════════════════════════ */
+  .success-state {
+    text-align: center;
+    padding: 80px 40px;
+  }
+  .success-icon { font-size: 64px; margin-bottom: 24px; }
+  .success-state h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; color: var(--primary); }
+  .success-state p { color: var(--text-muted); margin-bottom: 32px; }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .shop-layout, .cart-layout, .contact-layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar, .order-summary { position: static; }
+    .grid-3, .grid-4 { grid-template-columns: repeat(2,1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    nav .nav-links { display: none; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    .about-hero-content { padding: 32px; }
+  }
+  @media (max-width: 600px) {
+    .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 40px; letter-spacing: -1.5px; }
+    .cta-banner { padding: 40px 24px; }
+    .container { padding: 0 20px; }
+    .cart-item { grid-template-columns: 56px 1fr; }
+    .cart-item-price { grid-column: 2; }
+    .contact-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────── NAVBAR ──────────── -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">NOVA<span>.</span></div>
+  <ul class="nav-links">
+    <li><a onclick="navigate('home')" data-page="home" class="active">Ana Sayfa</a></li>
+    <li><a onclick="navigate('shop')" data-page="shop">Sipariş</a></li>
+    <li><a onclick="navigate('about')" data-page="about">Hakkımızda</a></li>
+    <li><a onclick="navigate('contact')" data-page="contact">İletişim</a></li>
+  </ul>
+  <button class="nav-cart" onclick="navigate('cart')">
+    <span>🛒</span> Sepetim
+    <span class="cart-badge" id="cart-badge">0</span>
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — HOME
+══════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="tag">Yeni Koleksiyon 2025</div>
+        <h1>
+          <span class="line-accent">Kaliteyi</span><br>
+          <span>Yeniden</span><br>
+          <span class="line-dim">Tanımla.</span>
+        </h1>
+        <p class="hero-sub">Premium ürünlerin en seçkin koleksiyonunu keşfedin. Hızlı teslimat, güvenli ödeme ve 30 gün iade garantisiyle.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="navigate('shop')">Alışverişe Başla →</button>
+          <button class="btn btn-outline" onclick="navigate('about')">Hakkımızda</button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-val">12K+</div>
+            <div class="stat-label">Mutlu Müşteri</div>
+          </div>
+          <div>
+            <div class="stat-val">480+</div>
+            <div class="stat-label">Ürün Çeşidi</div>
+          </div>
+          <div>
+            <div class="stat-val">4.9★</div>
+            <div class="stat-label">Müşteri Puanı</div>
+          </div>
+          <div>
+            <div class="stat-val">99%</div>
+            <div class="stat-label">Memnuniyet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <div class="tag">Neden NOVA?</div>
+      <h2 class="section-title">Farkımızı Keşfedin</h2>
+      <p class="section-sub">Her adımda mükemmellik anlayışıyla tasarlandı.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="feat-icon feat-icon-1">⚡</div>
+          <div class="feat-title">Hızlı Teslimat</div>
+          <p class="feat-desc">Siparişleriniz 24 saat içinde kargoya verilir. İstanbul içi aynı gün teslimat imkânı sunuyoruz.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon feat-icon-2">🔒</div>
+          <div class="feat-title">Güvenli Ödeme</div>
+          <p class="feat-desc">256-bit SSL şifreleme ve Stripe altyapısıyla kartınız her zaman güvende. 3D Secure desteği dahil.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon feat-icon-3">🔄</div>
+          <div class="feat-title">30 Gün İade</div>
+          <p class="feat-desc">Ürünü beğenmediniz mi? Soru sormadan 30 gün içinde ücretsiz iade imkânı sunuyoruz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="cta-banner">
+        <div class="tag">Özel Fırsat</div>
+        <h2>Bugün %20 İndirim Kazan</h2>
+        <p>İlk alışverişinizde geçerli olan özel indirim kodunuzu almak için hemen üye olun.</p>
+        <button class="btn btn-primary" onclick="navigate('shop')">Kampanyayı Keşfet →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">NOVA.</div>
+          <p>Premium ürünleri en iyi fiyatlarla sunan güvenilir e-ticaret platformunuz.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Sayfalar</div>
+          <ul class="footer-links">
+            <li><a onclick="navigate('home')">Ana Sayfa</a></li>
+            <li><a onclick="navigate('shop')">Sipariş</a></li>
+            <li><a onclick="navigate('cart')">Sepetim</a></li>
+            <li><a onclick="navigate('about')">Hakkımızda</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Destek</div>
+          <ul class="footer-links">
+            <li><a onclick="navigate('contact')">İletişim</a></li>
+            <li><a>SSS</a></li>
+            <li><a>Kargo Takibi</a></li>
+            <li><a>İade Politikası</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Sosyal Medya</div>
+          <div class="social-links">
+            <a class="social-btn">𝕏</a>
+            <a class="social-btn">in</a>
+            <a class="social-btn">ig</a>
+            <a class="social-btn">yt</a>
+          </div>
+          <div class="footer-col-title" style="margin-top:8px">Bülten</div>
+          <div class="newsletter">
+            <input class="newsletter-input" placeholder="E-posta adresiniz" type="email">
+            <button class="newsletter-btn">→</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 NOVA. Tüm hakları saklıdır.</p>
+        <p>Gizlilik Politikası · Kullanım Koşulları</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — SHOP
+══════════════════════════════════════════ -->
+<div id="page-shop" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <span onclick="navigate('home')" style="cursor:pointer;color:var(--text-muted)">Ana Sayfa</span>
+        <span>›</span>
+        <span class="current">Sipariş</span>
+      </div>
+      <h1 class="section-title">Ürünlerimiz</h1>
+      <p style="color:var(--text-muted); font-size:15px">480+ ürün arasından dilediğinizi seçin</p>
+    </div>
+
+    <div class="shop-layout">
+      <!-- PRODUCT GRID -->
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <span style="font-size:14px; color:var(--text-muted)">8 ürün listeleniyor</span>
+          <select class="range-input" style="width:auto; padding:8px 14px;">
+            <option>En Yeni</option>
+            <option>En Ucuz</option>
+            <option>En Pahalı</option>
+            <option>En Çok Satan</option>
+          </select>
+        </div>
+        <div class="product-grid" id="product-grid">
+          <!-- Products rendered by JS -->
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="sidebar-title">Filtreler</div>
+        <div class="filter-group">
+          <div class="filter-label">Kategori</div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" checked> Elektronik</label>
+            <label class="filter-opt"><input type="checkbox" checked> Aksesuar</label>
+            <label class="filter-opt"><input type="checkbox"> Giyim</label>
+            <label class="filter-opt"><input type="checkbox"> Ev & Yaşam</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Fiyat Aralığı</div>
+          <div class="price-range">
+            <div class="range-inputs">
+              <input class="range-input" type="number" placeholder="Min ₺" value="0">
+              <input class="range-input" type="number" placeholder="Max ₺" value="5000">
+            </div>
+            <button class="btn btn-outline" style="padding:8px 16px; font-size:13px; margin-top:4px;">Uygula</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Değerlendirme</div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" checked> ★★★★★ (5 yıldız)</label>
+            <label class="filter-opt"><input type="checkbox" checked> ★★★★ ve üzeri</label>
+            <label class="filter-opt"><input type="checkbox"> ★★★ ve üzeri</label>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:8px;">Filtreleri Uygula</button>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:80px;">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 NOVA. Tüm hakları saklıdır.</p>
+        <p><a style="color:var(--text-muted);cursor:pointer" onclick="navigate('contact')">İletişim</a> · <a style="color:var(--text-muted);cursor:pointer" onclick="navigate('home')">Ana Sayfa</a></p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — CART
+══════════════════════════════════════════ -->
+<div id="page-cart" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <span onclick="navigate('home')" style="cursor:pointer;color:var(--text-muted)">Ana Sayfa</span>
+        <span>›</span>
+        <span class="current">Sepetim</span>
+      </div>
+      <h1 class="section-title">Sepetim</h1>
+    </div>
+
+    <div id="cart-empty-state" class="cart-empty" style="display:none;">
+      <div class="big-icon">🛒</div>
+      <h3>Sepetiniz boş</h3>
+      <p style="color:var(--text-muted);margin-bottom:24px;">Ürünleri inceleyip sepetinize ekleyebilirsiniz.</p>
+      <button class="btn btn-primary" onclick="navigate('shop')">Alışverişe Başla →</button>
+    </div>
+
+    <div id="cart-content" class="cart-layout">
+      <!-- LEFT: CART ITEMS -->
+      <div>
+        <div class="cart-items" id="cart-items-list"></div>
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <div class="order-summary">
+        <div class="sidebar-title">Sipariş Özeti</div>
+
+        <div class="summary-row">
+          <span class="label">Ara Toplam</span>
+          <span id="subtotal-val">₺0</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Kargo</span>
+          <span id="shipping-val" style="color:var(--primary)">Ücretsiz</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">KDV (%18)</span>
+          <span id="tax-val">₺0</span>
+        </div>
+        <div class="summary-total">
+          <span>Toplam</span>
+          <span id="total-val" style="color:var(--primary)">₺0</span>
+        </div>
+
+        <div id="checkout-form-wrap">
+          <div class="stripe-section">
+            <div class="stripe-title">Güvenli Ödeme</div>
+
+            <div class="form-field">
+              <label class="form-label">Kart Üzerindeki İsim</label>
+              <input class="form-input" id="card-name" placeholder="Ad Soyad" type="text">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Kart Numarası</label>
+              <input class="form-input" id="card-number" placeholder="4242 4242 4242 4242" maxlength="19" type="text">
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Son Kullanma</label>
+                <input class="form-input" id="card-expiry" placeholder="AA/YY" maxlength="5" type="text">
+              </div>
+              <div class="form-field">
+                <label class="form-label">CVV</label>
+                <input class="form-input" id="card-cvv" placeholder="123" maxlength="3" type="password">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="handlePayment()" style="margin-top:8px; height:48px;">
+              🔒 Ödemeyi Tamamla
+            </button>
+            <p style="font-size:12px; color:var(--text-dim); text-align:center; margin-top:10px;">Stripe test modu aktif · 4242 4242 4242 4242</p>
+          </div>
+        </div>
+
+        <div id="payment-success" style="display:none;">
+          <div class="success-state">
+            <div class="success-icon">✅</div>
+            <h2>Ödeme Başarılı!</h2>
+            <p>Siparişiniz alındı. Kargo takip numarası e-posta adresinize gönderilecektir.</p>
+            <button class="btn btn-outline btn-full" onclick="navigate('shop')">Alışverişe Devam Et</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:80px;">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 NOVA. Tüm hakları saklıdır.</p>
+        <p>Güvenli ödeme · Stripe altyapısı</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — ABOUT
+══════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="container">
+    <!-- HERO -->
+    <div class="about-hero">
+      <div class="about-hero-bg"></div>
+      <div class="about-hero-grid"></div>
+      <div class="about-hero-blob ahb1"></div>
+      <div class="about-hero-blob ahb2"></div>
+      <div class="about-hero-content">
+        <div class="tag">Biz Kimiz?</div>
+        <h1>Kaliteye Olan<br>Tutkumuz</h1>
+        <p>2018'den bu yana premium ürünleri en uygun fiyatlarla müşterilerimize ulaştırıyoruz.</p>
+      </div>
+    </div>
+
+    <!-- MISSION -->
+    <div class="mission-section">
+      <div class="divider"></div>
+      <h2>Misyonumuz</h2>
+      <p>NOVA olarak amacımız; kaliteli ürünleri herkes için erişilebilir kılmak ve alışveriş deneyimini keyifli bir yolculuğa dönüştürmektir. Müşteri memnuniyeti, yaptığımız her işin merkezinde yer almaktadır.</p>
+    </div>
+
+    <!-- VALUES -->
+    <div class="section">
+      <div class="grid-3">
+        <div class="card">
+          <div class="feat-icon feat-icon-1">🎯</div>
+          <div class="feat-title">Odak</div>
+          <p class="feat-desc">Her ürünü titizlikle seçiyor, kalite standartlarımızdan asla taviz vermiyoruz.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon feat-icon-2">💚</div>
+          <div class="feat-title">Şeffaflık</div>
+          <p class="feat-desc">Fiyatlarımız, koşullarımız ve süreçlerimiz konusunda her zaman açık ve dürüstüz.</p>
+        </div>
+        <div class="card">
+          <div class="feat-icon feat-icon-3">🤝</div>
+          <div class="feat-title">Topluluk</div>
+          <p class="feat-desc">Müşterilerimizle uzun soluklu ilişkiler kuruyor, büyürken birlikte büyüyoruz.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="team-section">
+      <h2>Ekibimiz</h2>
+      <div class="grid-3">
+        <div class="team-card">
+          <div class="team-avatar">👩‍💼</div>
+          <div class="team-name">Ayşe Kaya</div>
+          <div class="team-role">Kurucu & CEO</div>
+          <p class="team-bio">10+ yıllık e-ticaret deneyimiyle NOVA'yı sektörün öncüsü hâline getiriyor.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👨‍💻</div>
+          <div class="team-name">Mehmet Demir</div>
+          <div class="team-role">CTO</div>
+          <p class="team-bio">Platformun teknik altyapısını ve ürün kalitesini sürekli geliştiriyor.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👩‍🎨</div>
+          <div class="team-name">Zeynep Arslan</div>
+          <div class="team-role">Tasarım Direktörü</div>
+          <p class="team-bio">Kullanıcı deneyimini mükemmelleştirmek için her detaya özen gösteriyor.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:80px;">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 NOVA. Tüm hakları saklıdır.</p>
+        <p><a style="color:var(--text-muted);cursor:pointer" onclick="navigate('contact')">İletişim</a></p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — CONTACT
+══════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <span onclick="navigate('home')" style="cursor:pointer;color:var(--text-muted)">Ana Sayfa</span>
+        <span>›</span>
+        <span class="current">İletişim</span>
+      </div>
+      <h1 class="section-title">Bize Ulaşın</h1>
+      <p style="color:var(--text-muted); font-size:15px">Sorularınız için 7/24 buradayız</p>
+    </div>
+
+    <div class="contact-layout">
+      <!-- FORM -->
+      <div class="contact-form-wrap">
+        <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Mesaj Gönderin</h3>
+        <div id="contact-form-inner">
+          <div class="form-field">
+            <label class="form-label">Adınız Soyadınız</label>
+            <input class="form-input" id="c-name" placeholder="Ad Soyad" type="text">
+          </div>
+          <div class="form-field">
+            <label class="form-label">E-posta Adresiniz</label>
+            <input class="form-input" id="c-email" placeholder="ornek@eposta.com" type="email">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Konunuz</label>
+            <select class="form-input">
+              <option>Genel Bilgi</option>
+              <option>Sipariş Takibi</option>
+              <option>İade & Değişim</option>
+              <option>Teknik Destek</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Mesajınız</label>
+            <textarea class="form-textarea" id="c-message" placeholder="Mesajınızı buraya yazın..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="handleContact()" style="height:48px; margin-top:8px;">
+            Mesajı Gönder →
+          </button>
+        </div>
+        <div id="contact-success" style="display:none;">
+          <div class="success-state">
+            <div class="success-icon">📨</div>
+            <h2>Mesajınız İletildi!</h2>
+            <p>En kısa sürede size geri dönüş yapacağız. Teşekkür ederiz.</p>
+            <button class="btn btn-outline" onclick="resetContact()">Yeni Mesaj Gönder</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFO CARDS -->
+      <div>
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-icon">📍</div>
+            <div>
+              <div class="info-icon-label">Adres</div>
+              <div class="info-icon-val">Maslak Mahallesi, Büyükdere Cad. No:255, Sarıyer / İstanbul</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">📞</div>
+            <div>
+              <div class="info-icon-label">Telefon</div>
+              <div class="info-icon-val">+90 (212) 123 45 67</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">✉️</div>
+            <div>
+              <div class="info-icon-label">E-posta</div>
+              <div class="info-icon-val">destek@nova.com.tr</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-map">
+          <div class="contact-map-grid"></div>
+          <div class="map-pin">
+            <div class="map-dot"></div>
+            <span style="font-size:13px; color:var(--text-muted)">NOVA Merkez Ofis</span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px; background:rgba(124,92,252,0.05); border-color:rgba(124,92,252,0.15);">
+          <div style="font-size:13px; font-weight:600; color:#a688ff; margin-bottom:6px;">Çalışma Saatleri</div>
+          <div style="font-size:14px; color:var(--text-muted); line-height:1.8;">
+            Pazartesi – Cuma: 09:00 – 18:00<br>
+            Cumartesi: 10:00 – 15:00<br>
+            Pazar: Kapalı
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:80px;">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 NOVA. Tüm hakları saklıdır.</p>
+        <p>Gizlilik Politikası · Kullanım Koşulları</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">İşlem tamamlandı</span>
+</div>
+
+<!-- LOADING -->
+<div id="loading" class="loading-overlay">
+  <div class="spinner"></div>
+  <span style="font-size:14px; color:var(--text-muted)">İşleniyor...</span>
+</div>
+
+<script>
+/* ══════════════════
+   STATE
+══════════════════ */
+let cart = JSON.parse(localStorage.getItem('nova_cart') || '[]');
+let currentPage = 'home';
+
+/* ══════════════════
+   PRODUCTS DATA
+══════════════════ */
+const products = [
+  { id:1, name:'Pro Akıllı Saat',     price:1299, image:'⌚', badge:'Yeni',    stock:15 },
+  { id:2, name:'Kablosuz Kulaklık',   price:849,  image:'🎧', badge:'Bestseller', stock:8 },
+  { id:3, name:'Mekanik Klavye',      price:2490, image:'⌨️', badge:null,      stock:5 },
+  { id:4, name:'4K Web Kamera',       price:1750, image:'📷', badge:'İndirim',  stock:12 },
+  { id:5, name:'Dizüstü Stand',       price:399,  image:'💻', badge:null,      stock:25 },
+  { id:6, name:'USB-C Hub 7in1',      price:599,  image:'🔌', badge:'Yeni',    stock:30 },
+  { id:7, name:'RGB Mouse Pad XXL',   price:299,  image:'🖱️', badge:null,      stock:50 },
+  { id:8, name:'Taşınabilir Şarj',    price:459,  image:'🔋', badge:'Bestseller', stock:18 },
+];
+
+/* ══════════════════
+   NAVIGATION
+══════════════════ */
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  currentPage = page;
+  window.scrollTo(0, 0);
+
+  if (page === 'shop') renderProducts();
+  if (page === 'cart') renderCart();
+}
+
+/* ══════════════════
+   CART UTILS
+══════════════════ */
+function saveCart() {
+  localStorage.setItem('nova_cart', JSON.stringify(cart));
+  updateBadge();
+}
+
+function updateBadge() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-badge').textContent = total;
+}
+
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  const existing = cart.find(i => i.id === productId);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, qty: 1 });
+  }
+  saveCart();
+  showToast('✅', product.name + ' sepete eklendi!', 'success');
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(i => i.id !== productId);
+  saveCart();
+  renderCart();
+}
+
+function changeQty(productId, delta) {
+  const item = cart.find(i => i.id === productId);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveCart();
+  renderCart();
+}
+
+/* ══════════════════
+   RENDER PRODUCTS
+══════════════════ */
+function renderProducts() {
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = products.map(p => `
+    <div class="product-card">
+      <div class="product-img">
+        ${p.image}
+        ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">₺${p.price.toLocaleString('tr-TR')}</div>
+        <button class="btn btn-primary btn-full" style="padding:9px 16px; font-size:13px;" onclick="addToCart(${p.id})">
+          Sepete Ekle
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════
+   RENDER CART
+══════════════════ */
+function renderCart() {
+  const isEmpty = cart.length === 0;
+  document.getElementById('cart-empty-state').style.display = isEmpty ? 'block' : 'none';
+  document.getElementById('cart-content').style.display = isEmpty ? 'none' : 'grid';
+  if (isEmpty) return;
+
+  const list = document.getElementById('cart-items-list');
+  list.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">${item.image}</div>
+      <div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-sub">Birim fiyat: ₺${item.price.toLocaleString('tr-TR')}</div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="cart-item-price">₺${(item.price * item.qty).toLocaleString('tr-TR')}</div>
+        <button class="btn btn-danger" style="margin-top:8px; padding:6px 12px; font-size:12px;" onclick="removeFromCart(${item.id})">Kaldır</button>
+      </div>
+    </div>
+  `).join('');
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const tax = Math.round(subtotal * 0.18);
+  const total = subtotal + tax;
+
+  document.getElementById('subtotal-val').textContent = '₺' + subtotal.toLocaleString('tr-TR');
+  document.getElementById('tax-val').textContent = '₺' + tax.toLocaleString('tr-TR');
+  document.getElementById('total-val').textContent = '₺' + total.toLocaleString('tr-TR');
+}
+
+/* ══════════════════
+   PAYMENT
+══════════════════ */
+async function handlePayment() {
+  const name = document.getElementById('card-name').value.trim();
+  const num  = document.getElementById('card-number').value.trim();
+  const exp  = document.getElementById('card-expiry').value.trim();
+  const cvv  = document.getElementById('card-cvv').value.trim();
+
+  if (!name || !num || !exp || !cvv) {
+    showToast('⚠️', 'Lütfen tüm kart bilgilerini doldurun.', 'error');
+    return;
+  }
+
+  showLoading(true);
+  await delay(1800);
+  showLoading(false);
+
+  // Simulate saving to Supabase orders table
+  const order = {
+    id: 'ord_' + Date.now(),
+    user_id: 'guest_' + Math.random().toString(36).substr(2,9),
+    items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+    total: cart.reduce((s,i) => s + i.price * i.qty, 0),
+    status: 'paid',
+    created_at: new Date().toISOString()
+  };
+  console.log('[Supabase] orders.insert:', order);
+
+  cart = [];
+  saveCart();
+
+  document.getElementById('checkout-form-wrap').style.display = 'none';
+  document.getElementById('payment-success').style.display = 'block';
+  showToast('🎉', 'Ödemeniz başarıyla tamamlandı!', 'success');
+}
+
+/* ══════════════════
+   CONTACT
+══════════════════ */
+async function handleContact() {
+  const name    = document.getElementById('c-name').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const message = document.getElementById('c-message').value.trim();
+
+  if (!name || !email || !message) {
+    showToast('⚠️', 'Lütfen tüm alanları doldurun.', 'error');
+    return;
+  }
+
+  showLoading(true);
+  await delay(1200);
+  showLoading(false);
+
+  // Simulate Supabase messages.insert
+  const msg = {
+    id: 'msg_' + Date.now(),
+    name, email, message,
+    created_at: new Date().toISOString()
+  };
+  console.log('[Supabase] messages.insert:', msg);
+
+  document.getElementById('contact-form-inner').style.display = 'none';
+  document.getElementById('contact-success').style.display = 'block';
+}
+
+function resetContact() {
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-email').value = '';
+  document.getElementById('c-message').value = '';
+  document.getElementById('contact-form-inner').style.display = 'block';
+  document.getElementById('contact-success').style.display = 'none';
+}
+
+/* ══════════════════
+   UTILS
+══════════════════ */
+function showToast(icon, msg, type) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = 'toast toast-' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function showLoading(show) {
+  document.getElementById('loading').classList.toggle('active', show);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ══════════════════
+   CARD FORMATTING
+══════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  updateBadge();
+
+  const cardNum = document.getElementById('card-number');
+  if (cardNum) {
+    cardNum.addEventListener('input', e => {
+      let v = e.target.value.replace(/\D/g,'').substring(0,16);
+      e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
+    });
+  }
+
+  const cardExp = document.getElementById('card-expiry');
+  if (cardExp) {
+    cardExp.addEventListener('input', e => {
+      let v = e.target.value.replace(/\D/g,'').substring(0,4);
+      if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2);
+      e.target.value = v;
+    });
+  }
+});
+</script>
+</body>
+</html>
